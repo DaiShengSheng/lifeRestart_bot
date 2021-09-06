@@ -45,7 +45,7 @@ async def remake(bot,ev:CQEvent):
     Life.load(FILE_PATH+'\data')
     life = Life()
     life.setErrorHandler(lambda e: traceback.print_exc())
-    life.setTalentHandler(lambda ts: ts[0].id)
+    life.setTalentHandler(lambda ts: random.choice(ts).id)
     life.setPropertyhandler(genp)
 
     life.choose()

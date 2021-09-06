@@ -29,11 +29,11 @@ class EventManager:
             rnd -= ev.weight
             if rnd <= 0: return ev.evt
         return events[0].evt
+
+    def _runEvent(self, event: Event) -> List[str]:
+        self.triggered.add(event.id)
+        return event.runEvent(self._base.property, self._runEvent)
     
     def runEvents(self, events: List[WeightedEvent]) -> List[str]:
-        result = []
         ev = self._randEvent(events)
-        self.triggered.add(ev)
-        result.extend(EventManager._events[ev].runEvent(self._base.property))
-
-        return result
+        return self._runEvent(EventManager._events[ev])
