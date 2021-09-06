@@ -65,4 +65,7 @@ async def remake(bot,ev:CQEvent):
     res = life.run()
     mes = '\n'.join('\n'.join(x) for x in res)
     pic = ImgText(mes)
-    await bot.finish(ev, pic.draw_text(), at_sender=True)
+    await bot.send(ev, pic.draw_text(), at_sender=True)
+    sum=life.property.gensummary()
+    pic = ImgText(sum)
+    await bot.send(ev, pic.draw_text(), at_sender=True)
