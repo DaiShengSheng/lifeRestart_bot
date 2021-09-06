@@ -80,7 +80,8 @@ class Life:
                 t = tdict[self._talenthandler(talents)]
                 for t2 in self.talent.talents:
                     if t2.isExclusiveWith(t):
-                        raise HandlerException(f'talent chosen conflict with {t2}')
+                        return False
+                        #raise HandlerException(f'talent chosen conflict with {t2}')
                 self.talent.addTalent(t)
 
                 talents.remove(t)
@@ -95,10 +96,11 @@ class Life:
                 eff = self._propertyhandler(self.property.total)
                 pts = [eff[k] for k in eff]
                 if sum(pts) != self.property.total or max(pts) > 10 or min(pts) < 0:
-                    raise HandlerException(f'property allocation points incorrect')
+                    return False
+                    #raise HandlerException(f'property allocation points incorrect')
                 self.property.apply(eff)
                 break
             except Exception as e:
                 self._errorhandler(e)
 
-
+        return True
