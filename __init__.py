@@ -39,16 +39,19 @@ def genp(prop):
 
 @sv.on_fullmatch(("/remake","人生重来"))
 async def remake(bot,ev:CQEvent):
+    pic_list = []
+    mes_list = []
+
     Life.load(FILE_PATH+'\data')
     life = Life()
     life.setErrorHandler(lambda e: traceback.print_exc())
-    life.setTalentHandler(lambda ts: random.choice(ts).id)
+    life.setTalentHandler(lambda ts: ts[0].id)
     life.setPropertyhandler(genp)
 
     life.choose()
 
     choice = 0
-    person = "你本次重生的基本信息如下：\n\n【你的天赋】\n"
+    person = ev["sender"]["nickname"] + "本次重生的基本信息如下：\n\n【你的天赋】\n"
     for t in life.talent.talents:
         choice = choice + 1
         person = person + str(choice) + "、天赋：【" + t.name + "】" + " 效果:" + t.desc + "\n"
@@ -58,14 +61,30 @@ async def remake(bot,ev:CQEvent):
     person = person + "智力值:" + str(life.property.INT)+"  "
     person = person + "体质值:" + str(life.property.STR)+"  "
     person = person + "财富值:" + str(life.property.MNY)+"  "
-    pic = ImgText(person)
-    await bot.send(ev, "你的命运正在重启....")
+    pic_list.append("这是"+ev["sender"]["nickname"]+"本次轮回的基础属性和天赋:")
+    pic_list.append(ImgText(person).draw_text())
+
+    await bot.send(ev, "你的命运正在重启....",at_sender=True)
     time.sleep(5)
-    await bot.send(ev, pic.draw_text(), at_sender=True)
-    res = life.run()
+
+    res = life.run() #命运之轮开始转动
     mes = '\n'.join('\n'.join(x) for x in res)
-    pic = ImgText(mes)
-    await bot.send(ev, pic.draw_text(), at_sender=True)
-    sum=life.property.gensummary()
-    pic = ImgText(sum)
-    await bot.send(ev, pic.draw_text(), at_sender=True)
+    pic_list.append("这是"+ev["sender"]["nickname"]+"本次轮回的生平:")
+    pic_list.append(ImgText(mes).draw_text())
+
+    sum = life.property.gensummary() #你的命运之轮到头了
+    pic_list.append("这是" + ev["sender"]["nickname"] + "本次轮回的评价:")
+    pic_list.append(ImgText(sum).draw_text())
+
+    for img in pic_list:
+        data = {
+            "type": "node",
+            "data": {
+                "name": "工具姬",
+                "uin": "2841374973",
+                "content": img
+            }
+        }
+        mes_list.append(data)
+
+    await bot.send_group_forward_msg(group_id=ev['group_id'], messages=mes_list)
