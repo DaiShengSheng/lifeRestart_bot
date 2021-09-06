@@ -14,20 +14,21 @@ def genp(prop):
     # for _ in range(4):
     #     ps.append(min(prop, 8))
     #     prop -= ps[-1]
+    tmp = prop
     while True:
         for i in range(0,4):
             if i == 3:
-                ps.append(prop)
+                ps.append(tmp)
             else:
-                if prop>=10:
+                if tmp>=10:
                     ps.append(random.randint(0, 10))
                 else:
-                    ps.append(random.randint(0, prop))
-                prop -= ps[-1]
+                    ps.append(random.randint(0, tmp))
+                tmp -= ps[-1]
         if ps[3]<10:
             break
         else:
-            prop = 20
+            tmp = prop
             ps.clear()
     return {
         'CHR': ps[0],
