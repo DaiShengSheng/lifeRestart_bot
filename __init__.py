@@ -1,10 +1,10 @@
 # coding=utf-8
 from hoshino import Service
 from hoshino.typing import HoshinoBot,CQEvent
+from os.path import join
 from .Life import Life
 from .PicClass import *
 import traceback
-import time
 import random
 
 sv = Service("人生重来模拟器")
@@ -42,7 +42,7 @@ async def remake(bot,ev:CQEvent):
     pic_list = []
     mes_list = []
 
-    Life.load(FILE_PATH+'\data')
+    Life.load(join(FILE_PATH,'data'))
     while True:
         life = Life()
         life.setErrorHandler(lambda e: traceback.print_exc())
@@ -67,7 +67,6 @@ async def remake(bot,ev:CQEvent):
     pic_list.append(ImgText(person).draw_text())
 
     await bot.send(ev, "你的命运正在重启....",at_sender=True)
-    time.sleep(5)
 
     res = life.run() #命运之轮开始转动
     mes = '\n'.join('\n'.join(x) for x in res)
