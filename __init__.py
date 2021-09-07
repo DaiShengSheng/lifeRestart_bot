@@ -1,6 +1,7 @@
 # coding=utf-8
 from hoshino import Service
 from hoshino.typing import HoshinoBot,CQEvent
+from os.path import join
 from .Life import Life
 from .PicClass import *
 import traceback
@@ -42,7 +43,7 @@ async def remake(bot,ev:CQEvent):
     pic_list = []
     mes_list = []
 
-    Life.load(FILE_PATH+'\data')
+    Life.load(join(FILE_PATH,'data'))
     while True:
         life = Life()
         life.setErrorHandler(lambda e: traceback.print_exc())
