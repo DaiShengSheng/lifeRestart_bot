@@ -52,8 +52,9 @@ async def remake(bot,ev:CQEvent):
         if flag:
             break
 
+    name = ev["sender"]['card'] or ev["sender"]["nickname"]
     choice = 0
-    person = ev["sender"]["nickname"] + "本次重生的基本信息如下：\n\n【你的天赋】\n"
+    person = name + "本次重生的基本信息如下：\n\n【你的天赋】\n"
     for t in life.talent.talents:
         choice = choice + 1
         person = person + str(choice) + "、天赋：【" + t.name + "】" + " 效果:" + t.desc + "\n"
@@ -63,18 +64,18 @@ async def remake(bot,ev:CQEvent):
     person = person + "智力值:" + str(life.property.INT)+"  "
     person = person + "体质值:" + str(life.property.STR)+"  "
     person = person + "财富值:" + str(life.property.MNY)+"  "
-    pic_list.append("这是"+ev["sender"]["nickname"]+"本次轮回的基础属性和天赋:")
+    pic_list.append("这是"+name+"本次轮回的基础属性和天赋:")
     pic_list.append(ImgText(person).draw_text())
 
     await bot.send(ev, "你的命运正在重启....",at_sender=True)
 
     res = life.run() #命运之轮开始转动
     mes = '\n'.join('\n'.join(x) for x in res)
-    pic_list.append("这是"+ev["sender"]["nickname"]+"本次轮回的生平:")
+    pic_list.append("这是"+name+"本次轮回的生平:")
     pic_list.append(ImgText(mes).draw_text())
 
     sum = life.property.gensummary() #你的命运之轮到头了
-    pic_list.append("这是" + ev["sender"]["nickname"] + "本次轮回的评价:")
+    pic_list.append("这是" + name + "本次轮回的评价:")
     pic_list.append(ImgText(sum).draw_text())
 
     for img in pic_list:
