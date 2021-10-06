@@ -80,8 +80,8 @@ sum_data = {
     ]
 }
 
-
 class PropertyManager:
+
     def __init__(self, base):
         self._base = base
         self.CHR = 0 # 颜值 charm CHR
@@ -94,6 +94,12 @@ class PropertyManager:
         self.LIF = 1 # hp
         
         self.total = 20
+
+        self.TMS = 1
+        self.AVT = []
+
+    def __str__(self):
+        return f'属性：颜值{self.CHR} 智力{self.INT} 体质{self.STR} 家境{self.MNY} 快乐{self.SPR}'
     
     @property
     def TLT(self) -> Set[int]: # 天赋 talent TLT
@@ -105,8 +111,12 @@ class PropertyManager:
 
     def apply(self, effect: Dict[str, int]):
         for key in effect:
+            if key == "RDM":
+                k = ['CHR','INT','STR','MNY','SPR'][id(key) % 5]
+                setattr(self, k, getattr(self, k) + effect[key])
+                continue
             setattr(self, key, getattr(self, key) + effect[key])
-            
+
     def gensummary(self):
         summary = '==人生总结==\n\n'
 
@@ -116,7 +126,7 @@ class PropertyManager:
                 judge = res["judge"]
             else:
                 break
-        summary = summary + "颜值:  " + str(self.CHR)+"  "+judge+"\n"
+        summary = summary + "颜值:  " + str(self.CHR) + "  " + judge + "\n"
 
         judge = '地狱'
         for res in sum_data['INT']:
@@ -124,7 +134,7 @@ class PropertyManager:
                 judge = res["judge"]
             else:
                 break
-        summary = summary + "智力:  " + str(self.INT)+"  "+judge+"\n"
+        summary = summary + "智力:  " + str(self.INT) + "  " + judge + "\n"
 
         judge = '地狱'
         for res in sum_data['STR']:
@@ -132,7 +142,7 @@ class PropertyManager:
                 judge = res["judge"]
             else:
                 break
-        summary = summary + "体质:  " + str(self.STR)+"  "+judge+"\n"
+        summary = summary + "体质:  " + str(self.STR) + "  " + judge + "\n"
 
         judge = '地狱'
         for res in sum_data['MNY']:
@@ -140,7 +150,7 @@ class PropertyManager:
                 judge = res["judge"]
             else:
                 break
-        summary = summary + "家境:  " + str(self.MNY)+"  "+judge+"\n"
+        summary = summary + "家境:  " + str(self.MNY) + "  " + judge + "\n"
 
         judge = '地狱'
         for res in sum_data['SPR']:
@@ -148,7 +158,7 @@ class PropertyManager:
                 judge = res["judge"]
             else:
                 break
-        summary = summary + "快乐:  " + str(self.SPR)+"  "+judge+"\n"
+        summary = summary + "快乐:  " + str(self.SPR) + "  " + judge + "\n"
 
         judge = '胎死腹中'
         for res in sum_data['AGE']:
@@ -156,12 +166,12 @@ class PropertyManager:
                 judge = res["judge"]
             else:
                 break
-        summary = summary + "享年:  " + str(self.AGE)+"  "+judge+"\n"
+        summary = summary + "享年:  " + str(self.AGE) + "  " + judge + "\n"
 
         summary = summary + '\n'
 
         judge = '地狱'
-        sum = int((self.CHR+self.INT+self.STR+self.MNY+self.SPR)*2+self.AGE/2)
+        sum = int((self.CHR + self.INT + self.STR + self.MNY + self.SPR) * 2 + self.AGE / 2)
         for res in sum_data['SUM']:
             if sum >= res["min"]:
                 judge = res["judge"]
